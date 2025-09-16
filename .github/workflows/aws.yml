@@ -39,7 +39,7 @@ jobs:
 
       - name: Build image
         run: |
-          tar --exclude=app_* -czvf "app_$(date +%Y-%m-%d).tar.gz" .
+          tar -czvf "app_$(date +%Y-%m-%d).tar.gz" --exclude="app_$(date +%Y-%m-%d).tar.gz" .
 
       - name: push image to Amazon S3
         run: |
