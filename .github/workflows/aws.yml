@@ -66,5 +66,5 @@ jobs:
           host: ${{vars.INSTANCE_IP}}
           username: ec2-user
           key: ${{ secrets.SSH_PEM }}
-          script: sudo rsync -avz /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
+          script: sudo rsync -avz --exclude="/archived" ./ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
 
