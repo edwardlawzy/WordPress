@@ -51,13 +51,12 @@ jobs:
       - name: Deploy with Rsync
         uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
         with:
-              FLAGS: -avzr --delete
-              EXCLUDES: --exclude /archived
-              USER: ec2-user
-              HOST: ${{vars.INSTANCE_IP}}
-              LOCALPATH: /var/www/html/wordpress/
-              REMOTEPATH: /var/www/html/wordpress
-              DEPLOY_KEY: ${{ secrets.SSH_PEM }}
+              switches: -avzr --delete --exclude /archived
+              remote_user: ec2-user
+              remote_host: ${{vars.INSTANCE_IP}}
+              path: /var/www/html/wordpress/
+              remote_path: /var/www/html/wordpress
+              remote_key: ${{ secrets.SSH_PEM }}
 
 
 #      - name: Deploy to EC2 via SSH
