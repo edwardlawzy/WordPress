@@ -1,0 +1,52 @@
+#test
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read 
+
+name: Build and Publish image to a private aws registry
+on:
+  push:
+    branches: ["master"]
+#
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.ACCESSKEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACCESSKEY_PRIV }}
+          aws-region: us-east-1  # Replace with your AWS region
+
+
+#      - name: Configure AWS creds
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          role-to-assume: ${{ secrets.ROLE_ARN }}
+          #role-session-name: ${{ secrets. }}
+#          aws-region: us-east-1
+
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          tar -czvf "app_$(date +%Y-%m-%d).tar.gz" .
+          mkdir -p /var/www/wordpress
+          tar -xzvf "app_$(date +%Y-%m-%d).tar.gz" -C /var/www/wordpress
+          
+          aws s3 cp app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
+
+      - name: Build PEM
+        run: echo ${{secrets.SSH_PEM}} > key.pem
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: 
