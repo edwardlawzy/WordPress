@@ -39,13 +39,14 @@ jobs:
 
       - name: Build image
         run: |
-          tar -czvf "app_$(date +%Y-%m-%d).tar.gz" --exclude="app_$(date +%Y-%m-%d).tar.gz" .
+          mkdir /archived
+          tar -czvf "/archived/app_$(date +%Y-%m-%d).tar.gz" --exclude=/archived .
 
       - name: push image to Amazon S3
         run: |
           mkdir -p /var/www/html/wordpress
-          tar -xzvf "app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
-          aws s3 cp app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
+          tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
+          aws s3 cp /archived/app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
 
       - name: Build PEM
         run: echo ${{secrets.SSH_PEM}} > key.pem
