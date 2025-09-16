@@ -44,17 +44,18 @@ jobs:
 
       - name: push image to Amazon S3
         run: |
-          sudo mkdir -p /var/www/html/wordpress
-          sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           aws s3 cp /archived/app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
+#         sudo mkdir -p /var/www/html/wordpress
+#         sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
+          
 
       - name: Deploy with Rsync
         uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
         with:
-              switches: -avzr --delete --exclude /archived
+              switches: -avzr --delete --exclude="/archived"
               remote_user: ec2-user
               remote_host: ${{vars.INSTANCE_IP}}
-              path: /var/www/html/wordpress/
+              path: .
               remote_path: /var/www/html/wordpress
               remote_key: ${{ secrets.SSH_PEM }}
 
