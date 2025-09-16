@@ -39,7 +39,7 @@ jobs:
 
       - name: Build, tag, and push image to Amazon S3
         run: |
-          tar -czvf "app_$(date +%Y-%m-%d).tar.gz" .
+          tar --exclude=app_* -czvf "app_$(date +%Y-%m-%d).tar.gz" .
           mkdir -p /var/www/html/wordpress
           tar -xzvf "app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           
