@@ -49,22 +49,22 @@ jobs:
 #         sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           
 
-      - name: Deploy with Rsync
-        uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
-        with:
-              switches: -avzr --exclude="/archived"
-              remote_user: ec2-user
-              remote_host: ${{vars.INSTANCE_IP}}
-              path: .
-              remote_path: /var/www/html/wordpress
-              remote_key: ${{ secrets.SSH_PEM }}
-
-
-#      - name: Deploy to EC2 via SSH
-#        uses: appleboy/ssh-action@v0.1.10
+#      - name: Deploy with Rsync
+#        uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
 #        with:
-#          host: ${{vars.INSTANCE_IP}}
-#          username: ec2-user
-#          key: ${{ secrets.SSH_PEM }}
-#          script: rsync -avz /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
+#              switches: -avzr --exclude="/archived"
+#              remote_user: ec2-user
+#              remote_host: ${{vars.INSTANCE_IP}}
+#              path: .
+#              remote_path: /var/www/html/wordpress
+#              remote_key: ${{ secrets.SSH_PEM }}
+
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{vars.INSTANCE_IP}}
+          username: ec2-user
+          key: ${{ secrets.SSH_PEM }}
+          script: sudo rsync -avz /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
 
