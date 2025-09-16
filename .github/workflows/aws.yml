@@ -52,7 +52,7 @@ jobs:
       - name: Deploy with Rsync
         uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
         with:
-              switches: -avz --exclude="/archived"
+              switches: -avz --exclude="/archived" --exclude='.*'
               remote_user: ec2-user
               remote_host: ${{vars.INSTANCE_IP}}
               path: .
