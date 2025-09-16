@@ -40,12 +40,12 @@ jobs:
       - name: Build image
         run: |
           sudo mkdir /archived
-          tar -czvf "/archived/app_$(date +%Y-%m-%d).tar.gz" --exclude=/archived .
+          sudo tar -czvf "/archived/app_$(date +%Y-%m-%d).tar.gz" --exclude=/archived .
 
       - name: push image to Amazon S3
         run: |
           sudo mkdir -p /var/www/html/wordpress
-          tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
+          sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           aws s3 cp /archived/app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
 
       - name: Build PEM
