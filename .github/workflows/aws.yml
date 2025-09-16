@@ -48,5 +48,11 @@ jobs:
           sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           aws s3 cp /archived/app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
 
-      - name: Sync
-        run: rsync -avz -e /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{vars.INSTANCE_IP}}
+          username: ec2-user
+          key: ${{ secrets.SSH_PEM }}
+          script: rsync -avz /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
+
