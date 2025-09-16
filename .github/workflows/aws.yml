@@ -37,12 +37,14 @@ jobs:
 #        id: login-ecr
 #        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon S3
+      - name: Build image
         run: |
           tar --exclude=app_* -czvf "app_$(date +%Y-%m-%d).tar.gz" .
+
+      - name: push image to Amazon S3
+        run: |
           mkdir -p /var/www/html/wordpress
           tar -xzvf "app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
-          
           aws s3 cp app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
 
       - name: Build PEM
