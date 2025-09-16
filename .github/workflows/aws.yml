@@ -48,8 +48,5 @@ jobs:
           sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           aws s3 cp /archived/app_$(date +%Y-%m-%d).tar.gz s3://${{secrets.BUCKET_NAME}}/
 
-      - name: Build PEM
-        run: echo ${{secrets.SSH_PEM}} > key.pem
-
       - name: Sync
-        run: rsync -avz -e "ssh -i key.pem" /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
+        run: rsync -avz -e /var/www/html/wordpress/ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
