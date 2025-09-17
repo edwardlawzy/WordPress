@@ -69,6 +69,6 @@ jobs:
           script: |
             mkdir /home/ec2-user/archived
             aws s3 cp s3://${{secrets.BUCKET_NAME}}/ /home/ec2-user/archived/app.tar.gz
-            tar -xzvf "/archived/app.tar.gz" -C /home/ec2-user/archived/app
+            tar -xzvf "/home/ec2-user/archived/app.tar.gz" -C /home/ec2-user/archived/app
             sudo rsync -av /home/ec2-user/archived/app /var/www/html/wordpress
             sudo rm -rf /home/ec2-user/archived
