@@ -49,22 +49,25 @@ jobs:
 #         sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /var/www/html/wordpress
           
 
-      - name: Deploy with Rsync
-        uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
-        with:
-              switches: -av --exclude="/archived" --exclude='.*'
-              remote_user: ec2-user
-              remote_host: ${{vars.INSTANCE_IP}}
-              path: .
-              remote_path: /var/www/html/wordpress
-              remote_key: ${{ secrets.SSH_PEM }}
-
-
-#      - name: Deploy to EC2 via SSH
-#        uses: appleboy/ssh-action@v0.1.10
+#      - name: Deploy with Rsync
+#        uses: Burnett01/rsync-deployments@7.0.1 # Or another suitable rsync action
 #        with:
-#          host: ${{vars.INSTANCE_IP}}
-#          username: ec2-user
-#          key: ${{ secrets.SSH_PEM }}
-#          script: sudo rsync -avz --exclude="/archived" ./ ec2-user@${{vars.INSTANCE_IP}}:/var/www/html/wordpress/
+#              switches: -av --exclude="/archived" --exclude='.*'
+#              remote_user: ec2-user
+#              remote_host: ${{vars.INSTANCE_IP}}
+#              path: .
+#              remote_path: /var/www/html/wordpress
+#              remote_key: ${{ secrets.SSH_PEM }}
 
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{vars.INSTANCE_IP}}
+          username: ec2-user
+          key: ${{ secrets.SSH_PEM }}
+          script: |
+            sudo mkdir /archived
+            sudo aws s3 cp s3://${{secrets.BUCKET_NAME}}/ /archived/app_$(date +%Y-%m-%d).tar.gz
+            sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /archived/app
+            sudo rsync -av /archived/app /var/www/html/wordpress
