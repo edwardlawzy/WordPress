@@ -71,3 +71,4 @@ jobs:
             sudo aws s3 cp s3://${{secrets.BUCKET_NAME}}/ /archived/app_$(date +%Y-%m-%d).tar.gz
             sudo tar -xzvf "/archived/app_$(date +%Y-%m-%d).tar.gz" -C /archived/app
             sudo rsync -av /archived/app /var/www/html/wordpress
+            sudo rm -rf /archived
