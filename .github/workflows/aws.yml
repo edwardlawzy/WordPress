@@ -73,4 +73,4 @@ jobs:
             sudo systemctl stop nginx
             sudo rsync -av /home/ec2-user/archived/app /var/www/html/wordpress
             sudo systemctl start nginx
-            sudo rm -rf /home/ec2-user/archived
+            #sudo rm -rf /home/ec2-user/archived
