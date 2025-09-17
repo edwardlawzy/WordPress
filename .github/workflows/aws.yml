@@ -68,7 +68,7 @@ jobs:
           key: ${{ secrets.SSH_PEM }}
           script: |
             mkdir /home/ec2-user/archived
-            aws s3 cp s3://${{secrets.BUCKET_NAME}}/ /home/ec2-user/archived/app.tar.gz
+            aws s3 cp s3://${{secrets.BUCKET_NAME}}/app_$(date +%Y-%m-%d).tar.gz /home/ec2-user/archived/app.tar.gz
             tar -xzvf "/home/ec2-user/archived/app.tar.gz" -C /home/ec2-user/archived/app
             sudo rsync -av /home/ec2-user/archived/app /var/www/html/wordpress
             sudo rm -rf /home/ec2-user/archived
