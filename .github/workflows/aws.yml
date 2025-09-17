@@ -70,5 +70,7 @@ jobs:
             mkdir -p /home/ec2-user/archived/app
             aws s3 cp s3://${{secrets.BUCKET_NAME}}/app_$(date +%Y-%m-%d).tar.gz /home/ec2-user/archived/app.tar.gz
             tar -xzvf "/home/ec2-user/archived/app.tar.gz" -C /home/ec2-user/archived/app
+            sudo systemctl stop nginx
             sudo rsync -av /home/ec2-user/archived/app /var/www/html/wordpress
+            sudo systemctl start nginx
             sudo rm -rf /home/ec2-user/archived
